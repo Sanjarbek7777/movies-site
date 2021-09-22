@@ -117,6 +117,72 @@ if (elMovieSearchForm) {
   elMovieSearchForm.addEventListener('submit', onMovieSearchFormSubmit);
 }
 
+// Natijalar soniga ko'ra nechta bet bo'lishini aniqlaymiz
+let TOTAL_RESULTS = 200;
+let PER_PAGE_COUNT = 10;
+let PAGE_LINKS_TO_SHOW = 5; // only odd numbers
+let NEIGHBOUR_PAGES_COUNT = Math.floor(PAGE_LINKS_TO_SHOW / 2);
+let CURRENT_PAGE = 1;
+let PAGES_COUNT = Math.ceil(TOTAL_RESULTS / PER_PAGE_COUNT);
+
+
+function showPagination() {
+  let startPage = CURRENT_PAGE - NEIGHBOUR_PAGES_COUNT;
+  let endPage = CURRENT_PAGE + NEIGHBOUR_PAGES_COUNT;
+
+  if (endPage > PAGES_COUNT) {
+    startPage -= Math.abs(PAGES_COUNT - endPage);
+  }
+
+  for (let pageIndex = startPage; pageIndex <= endPage; pageIndex++) {
+    if (pageIndex < 1) {
+      endPage++;
+      continue;
+    }
+
+    if (pageIndex > PAGES_COUNT) {
+      break;
+    }
+
+    if (pageIndex === CURRENT_PAGE) {
+      console.log(`${pageIndex} active`);
+    } else {
+      console.log(pageIndex);
+    }
+  }
+}
+
+function goToPage (pageIndex) {
+  if (pageIndex > PAGES_COUNT) {
+    pageIndex = PAGES_COUNT;
+  }
+
+  if (pageIndex < 1) {
+    pageIndex = 1;
+  }
+
+  CURRENT_PAGE = pageIndex;
+  showPagination();
+}
+
+function goToPrevPage () {
+  goToPage(CURRENT_PAGE - 1);
+}
+
+function goToNextPage () {
+  goToPage(CURRENT_PAGE + 1);
+}
+
+function goToFirstPage () {
+  goToPage(1);
+}
+
+function goToLastPage () {
+  goToPage(PAGES_COUNT);
+}
+
+showPagination();
+
 getUniqueGenres();
 showGenreOptions();
 showMovies(movies.slice(0, 51));
